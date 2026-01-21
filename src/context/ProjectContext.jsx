@@ -9,20 +9,33 @@ export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProjectTitle, setSelectedProjectTitle] = useState("");
   const itemsPerPage = 5;
 
-  const filteredProjects = projects.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProjects = projects.filter((p) => {
+    const keyword = search.toLowerCase();
+    const thaiDate = new Date(p.date).toLocaleDateString("th-TH");
+
+    const matchSearch =
+      p.title.toLowerCase().includes(keyword) ||
+      p.episode.toLowerCase().includes(keyword) ||
+      p.date.includes(keyword) ||
+      thaiDate.includes(keyword);
+
+    const matchSelect =
+      !selectedProjectTitle || p.title === selectedProjectTitle;
+
+    return matchSearch && matchSelect;
+  });
   const sortedProjects = [...filteredProjects].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+    (a, b) => new Date(a.date) - new Date(b.date),
   );
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentProjects = sortedProjects.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
 
   const totalPages = Math.ceil(sortedProjects.length / itemsPerPage);
@@ -50,17 +63,30 @@ export const ProjectProvider = ({ children }) => {
     setProjects((prev) => [...prev, project]);
   };
 
+  const updateProject = (id, updatedProject) => {
+    if (!id) {
+      console.error("updateProject error: id is undefined", updatedProject);
+      return;
+    }
+    localStorage.setItem(`video:${id}`, JSON.stringify(updatedProject));
+
+    setProjects((prev) => prev.map((p) => (p.id === id ? updatedProject : p)));
+  };
+
   const deleteProject = (projectId) => {
     localStorage.removeItem(`video:${projectId}`);
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
   };
 
+  const uniqueTitles = [...new Set(projects.map((p) => p.title))];
   return (
     <ProjectContext.Provider
       value={{
+        uniqueTitles,
         projects,
         currentProjects,
         addProject,
+        updateProject,
         deleteProject,
         search,
         setSearch,
@@ -70,6 +96,8 @@ export const ProjectProvider = ({ children }) => {
         indexOfLastItem,
         indexOfFirstItem,
         filteredProjects,
+        selectedProjectTitle,
+        setSelectedProjectTitle,
       }}
     >
       {children}

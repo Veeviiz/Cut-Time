@@ -5,8 +5,8 @@ import { FaFilePen } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { MdOutlineNumbers } from "react-icons/md";
 
-const AddNewModal = ({ setOpen, onSuccess }) => {
-  const { addProject } = useProjects();
+const AddNewModal = ({ setOpen, onSuccess, project }) => {
+  const { addProject, updateProject } = useProjects();
   const [formData, setFormData] = useState({
     title: "",
     episode: "",
@@ -20,21 +20,31 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
       !formData.episode ||
       !formData.duration ||
       !formData.date
-    )
+    ) {
       return alert("กรุณากรอกข้อมูลให้ครบ");
-
-    const newProject = {
-      id: Date.now().toString(),
-      ...formData,
-      updated: formData.date || new Date().toLocaleString(),
-    };
+    }
 
     try {
-      addProject(newProject);
+      if (project) {
+        //  EDIT
+        updateProject(project.id, {
+          ...project,
+          ...formData,
+          updated: new Date().toISOString(),
+        });
+      } else {
+        //  ADD
+        const newProject = {
+          id: Date.now().toString(),
+          ...formData,
+          updated: new Date().toISOString(),
+        };
+        addProject(newProject);
+      }
+
       if (typeof onSuccess === "function") onSuccess();
       window.dispatchEvent(new Event("projectsUpdated"));
       setOpen(false);
-      setFormData({ title: "", episode: "", duration: "", date: "" });
     } catch (error) {
       console.error("Error saving project:", error);
     }
@@ -45,6 +55,7 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
   const getVideoDuration = (file) => {
     return new Promise((resolve) => {
       const video = document.createElement("video");
+
       video.preload = "metadata";
       video.src = URL.createObjectURL(file);
 
@@ -94,7 +105,7 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
       ...prev,
       title,
       episode,
-      duration: (duration / 60).toFixed(2),
+      duration: Math.floor(duration),
       date: new Date().toISOString().split("T")[0],
     }));
   };
@@ -105,11 +116,26 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
       document.body.style.overflow = prev;
     };
   }, []);
+
+  useEffect(() => {
+    if (project) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData({
+        title: project.title || "",
+        episode: project.episode || "",
+        duration: project.duration || "",
+        date: project.date || "",
+      });
+    }
+  }, [project]);
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <div className="flex flex-col justify-between bg-slate-800 rounded-lg p-6 w-full max-w-lg md:max-w-[50%]">
-          <h1 className="flex text-2xl font-bold pb-8">New Video Project</h1>
+          <h1 className="flex text-2xl font-bold pb-8">
+            {project ? "Edit Video Project" : "New Video Project"}
+          </h1>
           {/* Input */}
           <div className="flex flex-col items-start mb-8">
             <form autoComplete="on" className="w-full text-start">
@@ -152,7 +178,7 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
                 <div className="flex flex-col w-[50%] items-start">
                   <div className="flex">
                     <label className="px-2">Duration</label>
-                    <span className="text-gray-500">(minutes)</span>
+                    <span className="text-gray-500">(seconds)</span>
                   </div>
                   <div className="relative w-full inline-flex items-center">
                     <IoTime className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xl" />
@@ -206,9 +232,9 @@ const AddNewModal = ({ setOpen, onSuccess }) => {
             </button>
             <button
               onClick={handleSubmit}
-              className="px-4 py-2 rounded bg-blue-600 text-white cursor-pointer hover:bg-sky-500"
+              className="px-4 py-2 rounded bg-blue-600 text-white cursor-pointer hover:bg-sky-500 "
             >
-              + Create Project
+              {project ? "Save Changes" : "+ Create Project"}
             </button>
           </div>
         </div>
