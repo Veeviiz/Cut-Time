@@ -3,13 +3,25 @@ import { useProjects } from "../context/ProjectContext";
 import { BsFillStopwatchFill } from "react-icons/bs";
 const TotalTime = () => {
   const { projects } = useProjects();
-  const totalDuration = projects.reduce((sum, p) => {
+
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const currentMonthProjects = projects.filter((p) => {
+    if (!p.date) return false;
+    const d = new Date(p.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  const totalDuration = currentMonthProjects.reduce((sum, p) => {
     return sum + Number(p.duration || 0);
   }, 0);
 
   const hours = Math.floor(totalDuration / 3600);
   const minutes = Math.floor((totalDuration % 3600) / 60);
-  const totalMinutes = Math.floor(totalDuration / 60);
+  const totalMinutesRaw = totalDuration / 60;
+  const totalMinutes = Number(totalMinutesRaw.toFixed(2));
   console.log(totalMinutes);
   const totalPrice = totalMinutes * 20;
 

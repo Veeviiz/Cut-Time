@@ -10,9 +10,34 @@ export const ProjectProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProjectTitle, setSelectedProjectTitle] = useState("");
+
+  const getCurrentMonth = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  };
+
+  console.log(getCurrentMonth());
+
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
   const itemsPerPage = 5;
 
-  const filteredProjects = projects.filter((p) => {
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const monthFilterProjects = projects.filter((p) => {
+    if (!p.date) return false;
+    if (!selectedMonth) return true;
+
+    return p.date.startsWith(selectedMonth);
+  });
+
+  const currentMonthProjects = projects.filter((p) => {
+    if (!p.date) return false;
+    const d = new Date(p.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+  const filteredProjects = monthFilterProjects.filter((p) => {
     const keyword = search.toLowerCase();
     const thaiDate = new Date(p.date).toLocaleDateString("th-TH");
 
@@ -43,7 +68,7 @@ export const ProjectProvider = ({ children }) => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
-  }, [search]);
+  }, [search, selectedProjectTitle, selectedMonth]);
   useEffect(() => {
     const data = [];
 
@@ -98,6 +123,9 @@ export const ProjectProvider = ({ children }) => {
         filteredProjects,
         selectedProjectTitle,
         setSelectedProjectTitle,
+        currentMonthProjects,
+        selectedMonth,
+        setSelectedMonth,
       }}
     >
       {children}

@@ -11,6 +11,8 @@ const ToolBar = () => {
     uniqueTitles,
     setSelectedProjectTitle,
     selectedProjectTitle,
+    selectedMonth,
+    setSelectedMonth,
   } = useProjects();
 
   return (
@@ -42,37 +44,60 @@ const ToolBar = () => {
           </div>
 
           {/* BOTTOM ROW : FILTER */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 text-sm">
-            <span className="text-zinc-400 flex items-center gap-2">
-              FILTER BY:
-            </span>
-
-            <div className="relative">
-              <select
-                className="appearance-none bg-slate-900 text-white px-3 py-2 pr-10 rounded-md focus:outline focus:outline-sky-500 w-full md:w-auto"
-                value={selectedProjectTitle}
-                onChange={(e) => setSelectedProjectTitle(e.target.value)}
-              >
-                <option value="">All Projects</option>
-                {uniqueTitles.map((title) => (
-                  <option key={title} value={title}>
-                    {title}
-                  </option>
-                ))}
-              </select>
-
-              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
-                ▼
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 text-sm">
+              <span className="text-zinc-400 flex items-center gap-2">
+                MONTH FILTER:
               </span>
-            </div>
+              <div className="relative">
+                <input
+                  type="month"
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  value={selectedMonth}
+                  className="appearance-none bg-slate-900 text-white px-3 py-2 rounded-md focus:outline focus:outline-sky-500 w-full md:w-auto"
+                ></input>
+              </div>
 
-            {/* Clear */}
-            <button
-              className="text-blue-400 hover:underline ml-0 md:ml-2"
-              onClick={() => setSelectedProjectTitle("")}
-            >
-              Clear all
-            </button>
+              {/* Clear */}
+              {/* <button
+                className="text-blue-400 hover:underline ml-0 md:ml-2"
+                onClick={() => setSelectedProjectTitle("")}
+              >
+                Clear all
+              </button> */}
+            </div>
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 text-sm">
+              <span className="text-zinc-400 flex items-center gap-2">
+                FILTER BY:
+              </span>
+
+              <div className="relative">
+                <select
+                  className="appearance-none bg-slate-900 text-white px-3 py-2 pr-10 rounded-md focus:outline focus:outline-sky-500 w-full md:w-auto"
+                  value={selectedProjectTitle}
+                  onChange={(e) => setSelectedProjectTitle(e.target.value)}
+                >
+                  <option value="">All Projects</option>
+                  {uniqueTitles.map((title) => (
+                    <option key={title} value={title}>
+                      {title}
+                    </option>
+                  ))}
+                </select>
+
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                  ▼
+                </span>
+              </div>
+
+              {/* Clear */}
+              <button
+                className="text-blue-400 hover:underline ml-0 md:ml-2"
+                onClick={() => setSelectedProjectTitle("")}
+              >
+                Clear all
+              </button>
+            </div>
           </div>
         </div>
       </div>
