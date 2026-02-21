@@ -36,7 +36,7 @@ const ProjectTable = () => {
   };
   return (
     <>
-      <div className="w-full flex justify-center mt-6">
+      <div className="w-full flex justify-center mt-6 mb-10">
         <div className="w-full max-w-[95%] md:max-w-[70%] rounded-t-lg text-white">
           {/* Mobile list view (small screens) */}
           <div className="block md:hidden space-y-3">

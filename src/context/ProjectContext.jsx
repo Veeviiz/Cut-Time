@@ -103,6 +103,11 @@ export const ProjectProvider = ({ children }) => {
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
   };
 
+  // Average Duration
+  const averageDuration =
+    projects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
+      projects.length || 0;
+
   const uniqueTitles = [...new Set(projects.map((p) => p.title))];
   return (
     <ProjectContext.Provider
@@ -126,6 +131,7 @@ export const ProjectProvider = ({ children }) => {
         currentMonthProjects,
         selectedMonth,
         setSelectedMonth,
+        averageDuration,
       }}
     >
       {children}
