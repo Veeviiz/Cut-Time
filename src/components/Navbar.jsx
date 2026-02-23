@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import { PiFilmSlateFill } from "react-icons/pi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // 1. ลบ token
+    localStorage.removeItem("token");
 
+    // 2. ไปหน้า login
+    navigate("/login", { replace: true });
+  };
   const linkStyle = ({ isActive }) =>
     isActive ? "text-sky-400 font-semibold" : "hover:text-sky-400 transition";
 
@@ -68,7 +75,7 @@ const Navbar = () => {
 
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
-                  onClick={() => alert("Logout")}
+                  onClick={handleLogout}
                 >
                   Logout
                 </button>

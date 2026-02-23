@@ -105,8 +105,8 @@ export const ProjectProvider = ({ children }) => {
 
   // Average Duration
   const averageDuration =
-    projects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
-      projects.length || 0;
+    filteredProjects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
+      filteredProjects.length || 0;
 
   const uniqueTitles = [...new Set(projects.map((p) => p.title))];
   return (

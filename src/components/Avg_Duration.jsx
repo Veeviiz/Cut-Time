@@ -8,7 +8,7 @@ const Avg_Duration = () => {
   const averageMinutes = averageDuration / 60;
   return (
     <>
-      <div className="bg-slate-800 border border-gray-700 w-full max-w-[95%] sm:w-1/2 md:w-1/3 lg:w-70 h-full pb-4 flex-shrink-0 rounded-md shadow-md ">
+      <div className="bg-slate-800 border border-gray-700 w-full max-w-full sm:w-full md:w-full lg:w-full h-full pb-4 flex-shrink-0 rounded-md shadow-md ">
         <div>
           <div className="p-4 flex justify-between h-full">
             <p className="text-gray-400">Avg. Duration</p>
