@@ -108,6 +108,19 @@ export const ProjectProvider = ({ children }) => {
     filteredProjects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
       filteredProjects.length || 0;
 
+  const [year, month] = selectedMonth.split("-").map(Number);
+  const selectedMonthIndex = month - 1;
+
+  const lastMonthProjects = projects.filter((p) => {
+    if (!p.date) return false;
+
+    const d = new Date(p.date);
+
+    const lastMonth = selectedMonthIndex === 0 ? 11 : selectedMonthIndex - 1;
+    const lastMonthYear = selectedMonthIndex === 0 ? year - 1 : year;
+
+    return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
+  });
   const uniqueTitles = [...new Set(projects.map((p) => p.title))];
   return (
     <ProjectContext.Provider
@@ -132,6 +145,7 @@ export const ProjectProvider = ({ children }) => {
         selectedMonth,
         setSelectedMonth,
         averageDuration,
+        lastMonthProjects,
       }}
     >
       {children}

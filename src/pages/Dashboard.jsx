@@ -17,13 +17,13 @@ const DashboardContent = () => {
           <h1 className="text-4xl font-bold">Dashboard</h1>
 
           <div className="flex gap-4 items-center text-sm md:text-base">
-            <span className="text-zinc-400">MONTH FILTER:</span>
+            <span className="text-zinc-400">Monthly Summary</span>
 
             <input
               type="month"
               onChange={(e) => setSelectedMonth(e.target.value)}
               value={selectedMonth}
-              className="bg-slate-900 text-white px-3 py-2 rounded-md 
+              className="bg-slate-800 text-white px-3 py-1 rounded-md 
                          focus:outline focus:outline-sky-500"
             />
           </div>
