@@ -11,15 +11,39 @@ const Ep_Completed = () => {
   // );
   // console.log(`Last month's projects: ${lastMonthProjects.length}`);
 
-  const episode = filteredProjects.map((p) => p.episode);
+  // const episode = filteredProjects.map((p) => p.episode);
 
-  const result = episode.map((e) => {
-    const [start, end] = e.split("-").map(Number);
-    return end - start + 1;
-  });
+  // episode.forEach((e) => {
+  //   const [start, end] = (e || "").split("-").map(Number);
+  //   console.log(e, start, end);
+  // });
 
-  const totalEpisodes = result.reduce((sum, num) => sum + num, 0);
-  console.log(totalEpisodes);
+  // const result = episode.map((e) => {
+  //   const [start, end] = e.split("-").map(Number);
+  //   return end - start + 1;
+  // });
+
+  // const totalEpisodes = result.reduce((sum, num) => sum + num, 0);
+  // console.log("Total Episodes:", totalEpisodes);
+
+  const totalEpisodes = filteredProjects.reduce((sum, p) => {
+    if (!p.episode) return sum;
+
+    if (p.episode.includes("-")) {
+      const [start, end] = p.episode.split("-").map(Number);
+
+      if (isNaN(start) || isNaN(end)) return sum;
+
+      return sum + (end - start + 1);
+    } else {
+      const num = Number(p.episode);
+      if (isNaN(num)) return sum;
+
+      return sum + 1; // ตอนเดียว
+    }
+  }, 0);
+
+  console.log("Total Episodes:", totalEpisodes);
 
   // ฟังก์ชันนับจำนวนตอนจากรายการโปรเจกต์
   function countEpisodes(projects) {
