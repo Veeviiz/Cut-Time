@@ -8,7 +8,7 @@ import Avg_Duration from "../components/Avg_Duration";
 
 const DashboardContent = () => {
   const { selectedMonth, setSelectedMonth } = useProjects();
-
+  console.log(localStorage);
   return (
     <div className="w-full text-white">
       <div className="max-w-6xl mx-auto pt-8 px-4">

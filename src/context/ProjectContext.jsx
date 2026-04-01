@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+// import { supabase } from "../service/supabaseClient";
 const ProjectContext = createContext();
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -64,6 +64,18 @@ export const ProjectProvider = ({ children }) => {
   );
 
   const totalPages = Math.ceil(sortedProjects.length / itemsPerPage);
+
+  // useEffect(() => {
+  //   const loadProjects = async () => {
+  //     const { data, error } = await supabase.from("projects").select("*");
+  //     if (error) {
+  //       console.error("Supabase error", error);
+  //     } else {
+  //       setProjects(data); // สมมติมี setProjects
+  //     }
+  //   };
+  //   loadProjects();
+  // }, []);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
