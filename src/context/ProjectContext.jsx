@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-// import { supabase } from "../service/supabaseClient";
+import { supabase } from "../service/supabaseClient";
 const ProjectContext = createContext();
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -21,30 +21,46 @@ export const ProjectProvider = ({ children }) => {
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
   const itemsPerPage = 5;
 
+  useEffect(() => {
+    const loadProjects = async () => {
+      const { data, error } = await supabase.from("videos").select("*");
+      if (error) {
+        console.error("Supabase error", error);
+      } else {
+        setProjects(data);
+      }
+    };
+    loadProjects();
+  }, []);
+
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
 
   const monthFilterProjects = projects.filter((p) => {
-    if (!p.date) return false;
+    if (!p || !p.date) return false;
     if (!selectedMonth) return true;
 
-    return p.date.startsWith(selectedMonth);
+    const d = new Date(p.date);
+    const [year, month] = selectedMonth.split("-").map(Number);
+
+    return d.getFullYear() === year && d.getMonth() === month - 1;
   });
 
   const currentMonthProjects = projects.filter((p) => {
-    if (!p.date) return false;
+    if (!p || !p.date) return false;
     const d = new Date(p.date);
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
   const filteredProjects = monthFilterProjects.filter((p) => {
+    if (!p || !p.date) return false;
     const keyword = search.toLowerCase();
     const thaiDate = new Date(p.date).toLocaleDateString("th-TH");
 
     const matchSearch =
-      p.title.toLowerCase().includes(keyword) ||
-      p.episode.toLowerCase().includes(keyword) ||
-      p.date.includes(keyword) ||
+      String(p.title).toLowerCase().includes(keyword) ||
+      String(p.episode).toLowerCase().includes(keyword) ||
+      String(p.date).includes(keyword) ||
       thaiDate.includes(keyword);
 
     const matchSelect =
@@ -53,7 +69,7 @@ export const ProjectProvider = ({ children }) => {
     return matchSearch && matchSelect;
   });
   const sortedProjects = [...filteredProjects].sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
+    (a, b) => new Date(b.date) - new Date(a.date),
   );
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -65,54 +81,73 @@ export const ProjectProvider = ({ children }) => {
 
   const totalPages = Math.ceil(sortedProjects.length / itemsPerPage);
 
-  // useEffect(() => {
-  //   const loadProjects = async () => {
-  //     const { data, error } = await supabase.from("projects").select("*");
-  //     if (error) {
-  //       console.error("Supabase error", error);
-  //     } else {
-  //       setProjects(data); // สมมติมี setProjects
-  //     }
-  //   };
-  //   loadProjects();
-  // }, []);
-
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
   }, [search, selectedProjectTitle, selectedMonth]);
-  useEffect(() => {
-    const data = [];
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith("video:")) {
-        data.push(JSON.parse(localStorage.getItem(key)));
-      }
+  // useEffect(() => {
+  //   const data = [];
+
+  //   for (let i = 0; i < localStorage.length; i++) {
+  //     const key = localStorage.key(i);
+  //     if (key.startsWith("video:")) {
+  //       data.push(JSON.parse(localStorage.getItem(key)));
+  //     }
+  //   }
+
+  //   setProjects(data);
+  // }, []); // โหลดข้อมูลจาก localStorage เมื่อคอมโพเนนต์ถูกสร้างขึ้น
+
+  const addProject = async (project) => {
+    try {
+      const { data, error } = await supabase
+        .from("videos")
+        .insert([project])
+        .select();
+
+      if (error) throw error;
+
+      setProjects((prev) => [...prev, ...data]);
+    } catch (err) {
+      console.error("Insert failed:", err.message);
     }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setProjects(data);
-  }, []); //
-
-  const addProject = (project) => {
-    localStorage.setItem(`video:${project.id}`, JSON.stringify(project));
-    setProjects((prev) => [...prev, project]);
   };
 
-  const updateProject = (id, updatedProject) => {
+  const updateProject = async (id, updatedProject) => {
     if (!id) {
       console.error("updateProject error: id is undefined", updatedProject);
       return;
     }
-    localStorage.setItem(`video:${id}`, JSON.stringify(updatedProject));
+    try {
+      const { data, error } = await supabase
+        .from("videos")
+        .update(updatedProject)
+        .eq("id", id)
+        .select();
+      if (error) throw error;
 
-    setProjects((prev) => prev.map((p) => (p.id === id ? updatedProject : p)));
+      const updated = Array.isArray(data) ? data[0] : data;
+      if (!updated) throw new Error("No updated row returned from Supabase");
+
+      setProjects((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    } catch (err) {
+      console.error("Update failed:", err.message);
+    }
   };
 
-  const deleteProject = (projectId) => {
-    localStorage.removeItem(`video:${projectId}`);
-    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+  const deleteProject = async (projectId) => {
+    try {
+      const { error } = await supabase
+        .from("videos")
+        .delete()
+        .eq("id", projectId);
+      if (error) throw error;
+
+      localStorage.removeItem(`video:${projectId}`);
+      setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    } catch (err) {
+      console.error("Delete failed:", err.message);
+    }
   };
 
   // Average Duration
@@ -124,7 +159,7 @@ export const ProjectProvider = ({ children }) => {
   const selectedMonthIndex = month - 1;
 
   const lastMonthProjects = projects.filter((p) => {
-    if (!p.date) return false;
+    if (!p || !p.date) return false;
 
     const d = new Date(p.date);
 
@@ -133,7 +168,9 @@ export const ProjectProvider = ({ children }) => {
 
     return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
   });
-  const uniqueTitles = [...new Set(projects.map((p) => p.title))];
+  const uniqueTitles = [
+    ...new Set(projects.map((p) => p?.title).filter(Boolean)),
+  ];
   return (
     <ProjectContext.Provider
       value={{
