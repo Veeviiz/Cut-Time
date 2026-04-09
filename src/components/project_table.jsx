@@ -5,6 +5,7 @@ import { BiEdit } from "react-icons/bi";
 import { MobileSkeleton, TableSkeleton } from "../util/skeletonLoading";
 import AddNewModal from "./add_new_modal";
 const ProjectTable = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
   const [editingProject, setEditingProject] = useState(null);
   const { deleteProject, loading } = useProjects();
   const {
@@ -16,11 +17,21 @@ const ProjectTable = () => {
     totalPages,
     filteredProjects,
   } = useProjects();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
   const formatDuration = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    const day = date.getDate();
+    const month = date.toLocaleString("th-TH", { month: "short" });
+    const year = date.getFullYear(); // ค.ศ.
+
+    return `${day} ${month} ${year}`;
   };
   if (loading) {
     return (
@@ -57,7 +68,9 @@ const ProjectTable = () => {
                 className="bg-slate-900 border border-gray-800 rounded-lg p-4 flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-400">{p.date}</div>
+                  <div className="text-sm text-gray-400">
+                    {formatDate(p.date)}
+                  </div>
                   <div className="text-sm text-gray-400">EP {p.episode}</div>
                 </div>
                 <div className="font-medium text-lg">{p.title}</div>
@@ -114,7 +127,7 @@ const ProjectTable = () => {
                     className="border-b border-gray-800 bg-slate-900 hover:bg-slate-800 transition "
                   >
                     <td className="py-6 px-4 font-medium text-left">
-                      {p.date}
+                      {formatDate(p.date)}
                     </td>
                     <td className="py-7  flex items-center gap-1  ">
                       <div className="font-medium ">{p.title}</div>
