@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../service/supabaseClient";
+
 const ProjectContext = createContext();
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -10,6 +11,7 @@ export const ProjectProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProjectTitle, setSelectedProjectTitle] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const getCurrentMonth = () => {
     const now = new Date();
@@ -19,16 +21,19 @@ export const ProjectProvider = ({ children }) => {
   console.log(getCurrentMonth());
 
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
-  const itemsPerPage = 5;
+  const itemsPerPage = projects.length > 10 ? 20 : 10;
 
   useEffect(() => {
     const loadProjects = async () => {
+      setLoading(true);
+
       const { data, error } = await supabase.from("videos").select("*");
       if (error) {
         console.error("Supabase error", error);
       } else {
         setProjects(data);
       }
+      setLoading(false);
     };
     loadProjects();
   }, []);
@@ -195,6 +200,7 @@ export const ProjectProvider = ({ children }) => {
         setSelectedMonth,
         averageDuration,
         lastMonthProjects,
+        loading,
       }}
     >
       {children}

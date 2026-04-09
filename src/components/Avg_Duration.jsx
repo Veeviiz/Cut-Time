@@ -1,6 +1,6 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
-
+import NumberAnimate from "../util/NumberAnimate";
 import { RiTimerLine } from "react-icons/ri";
 const Avg_Duration = () => {
   const { averageDuration, lastMonthProjects } = useProjects();
@@ -32,7 +32,10 @@ const Avg_Duration = () => {
           </div>
           <div className="flex items-center">
             <h1 className="text-2xl md:text-3xl text-white font-bold px-4">
-              {averageMinutes.toFixed(0)} mins
+              <NumberAnimate
+                value={Number(averageMinutes.toFixed(0))}
+                type="duration"
+              />
             </h1>
             <p
               className={`text-sm px-4 mt-1 ${percentChange >= 0 ? "text-green-400" : "text-red-400"}`}

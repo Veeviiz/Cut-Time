@@ -1,6 +1,7 @@
 import React from "react";
 import { BsFillStopwatchFill } from "react-icons/bs";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import NumberAnimate from "../util/NumberAnimate";
 import { useProjects } from "../context/ProjectContext";
 const Ep_Completed = () => {
   const { filteredProjects, lastMonthProjects } = useProjects();
@@ -78,7 +79,10 @@ const Ep_Completed = () => {
           </div>
           <div className="flex items-center">
             <h1 className="text-2xl md:text-3xl text-white font-bold px-4">
-              {totalEpisodes || 0}
+              <NumberAnimate
+                value={totalEpisodes || 0}
+                type="number"
+              ></NumberAnimate>
             </h1>
             <p
               className={`text-sm px-4 mt-1 ${percentChange >= 0 ? "text-green-400" : "text-red-400"}`}

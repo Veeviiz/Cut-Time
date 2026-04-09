@@ -1,13 +1,14 @@
 import React from "react";
 import { ProjectProvider, useProjects } from "../context/ProjectContext";
-
+import { StatCardSkeleton } from "../util/skeletonLoading";
 import Ep_Completed from "../components/Ep_Completed";
 import Total_hours from "../components/Total_hours";
 import Total_earning from "../components/Total_earning";
 import Avg_Duration from "../components/Avg_Duration";
 
 const DashboardContent = () => {
-  const { selectedMonth, setSelectedMonth } = useProjects();
+  const { selectedMonth, setSelectedMonth, loading } = useProjects();
+
   console.log(localStorage);
   return (
     <div className="w-full text-white">
@@ -31,10 +32,20 @@ const DashboardContent = () => {
 
         {/* Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Total_earning />
-          <Total_hours />
-          <Ep_Completed />
-          <Avg_Duration />
+          {loading ? (
+            <>
+              {[...Array(4)].map((_, i) => (
+                <StatCardSkeleton key={i} />
+              ))}
+            </>
+          ) : (
+            <>
+              <Total_earning />
+              <Total_hours />
+              <Ep_Completed />
+              <Avg_Duration />
+            </>
+          )}
         </div>
       </div>
     </div>

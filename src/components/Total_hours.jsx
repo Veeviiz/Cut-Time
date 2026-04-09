@@ -1,6 +1,7 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
 import { BsFillStopwatchFill } from "react-icons/bs";
+import NumberAnimate from "../util/NumberAnimate";
 const Total_hours = () => {
   const { filteredProjects, lastMonthProjects } = useProjects();
 
@@ -18,8 +19,8 @@ const Total_hours = () => {
     return sum + Number(p.duration || 0);
   }, 0);
 
-  const hours = Math.floor(totalDuration / 3600);
-  const minutes = Math.floor((totalDuration % 3600) / 60);
+  // const hours = Math.floor(totalDuration / 3600);
+  // const minutes = Math.floor((totalDuration % 3600) / 60);
 
   const lastMonthDuration = lastMonthProjects.reduce((sum, p) => {
     return sum + Number(p.duration || 0);
@@ -48,7 +49,7 @@ const Total_hours = () => {
               </p>
             ) : (
               <p className="text-2xl md:text-3xl text-white font-bold px-4">
-                {hours}h {minutes}m
+                <NumberAnimate value={totalDuration} type="time" />
               </p>
             )}
             <p

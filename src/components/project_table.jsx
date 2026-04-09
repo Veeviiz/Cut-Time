@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useProjects } from "../context/ProjectContext";
 import { IoTrashBinOutline } from "react-icons/io5";
 import { BiEdit } from "react-icons/bi";
+import { MobileSkeleton, TableSkeleton } from "../util/skeletonLoading";
 import AddNewModal from "./add_new_modal";
 const ProjectTable = () => {
   const [editingProject, setEditingProject] = useState(null);
-  const { deleteProject } = useProjects();
+  const { deleteProject, loading } = useProjects();
   const {
     currentProjects,
     indexOfFirstItem,
@@ -15,11 +16,20 @@ const ProjectTable = () => {
     totalPages,
     filteredProjects,
   } = useProjects();
+  window.scrollTo({ top: 0, behavior: "smooth" });
   const formatDuration = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
+  if (loading) {
+    return (
+      <>
+        <MobileSkeleton />
+        <TableSkeleton />
+      </>
+    );
+  }
   if (currentProjects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-gray-400">
@@ -34,6 +44,7 @@ const ProjectTable = () => {
       deleteProject(projectId);
     }
   };
+
   return (
     <>
       <div className="w-full flex justify-center mt-6 mb-10">

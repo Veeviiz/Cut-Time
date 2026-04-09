@@ -1,6 +1,6 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
-
+import NumberAnimate from "../util/NumberAnimate";
 import { MdMonetizationOn } from "react-icons/md";
 const Total_earning = () => {
   const { filteredProjects, lastMonthProjects } = useProjects();
@@ -42,7 +42,7 @@ const Total_earning = () => {
           </div>
           <div className="flex items-center">
             <h1 className="text-2xl md:text-3xl text-white font-bold px-4">
-              ₿{totalPrice.toLocaleString()}
+              ₿<NumberAnimate value={totalPrice} />
             </h1>
             <p
               className={`text-sm px-4 mt-1 ${percentChange >= 0 ? "text-green-400" : "text-red-400"}`}
