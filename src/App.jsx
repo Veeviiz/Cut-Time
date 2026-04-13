@@ -2,19 +2,23 @@
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
+import SideBar from "./components/SideBar";
 
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
+
       <Routes>
-        <Route path="/projects" element={<Home />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<SideBar />}>
+          <Route index element={<Dashboard />} />
+          <Route path="projects" element={<Projects />} />
+        </Route>
       </Routes>
     </>
   );

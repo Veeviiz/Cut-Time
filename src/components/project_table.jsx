@@ -108,10 +108,10 @@ const ProjectTable = () => {
           </div>
 
           {/* Desktop/table view (md and up) */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="min-w-full rounded-t-lg overflow-hidden table-fixed">
+          <div className="hidden md:block overflow-x-auto ">
+            <table className="min-w-full rounded-t-lg overflow-hidden table-fixed ">
               <thead className="bg-slate-800">
-                <tr className="text-gray-400 text-sm border-b border-gray-700">
+                <tr className="text-gray-400 text-sm border border-gray-700">
                   <th className="py-3 px-4 text-left">DATE</th>
                   <th className="text-left">PROJECT TITLE</th>
                   <th className="py-3 px-4 text-left">EPISODE</th>
@@ -120,7 +120,7 @@ const ProjectTable = () => {
                 </tr>
               </thead>
 
-              <tbody className="bg-slate-800">
+              <tbody className="bg-slate-800 border border-gray-700">
                 {currentProjects.map((p) => (
                   <tr
                     key={p.id}
@@ -168,7 +168,7 @@ const ProjectTable = () => {
             </table>
           </div>
 
-          <div className="min-w-full rounded-b-lg overflow-hidden table-fixed bg-slate-800 flex justify-between px-4 py-3 items-center mt-3">
+          <div className="min-w-full rounded-b-lg overflow-hidden table-fixed bg-slate-800 border border-gray-700 flex justify-between px-4 py-3 items-center ">
             {currentProjects.length > 0 ? (
               <p className="text-sm text-gray-400">
                 Showing {indexOfFirstItem + 1}–

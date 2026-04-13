@@ -21,7 +21,7 @@ export const ProjectProvider = ({ children }) => {
   console.log(getCurrentMonth());
 
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
-  const itemsPerPage = projects.length > 10 ? 10 : 10;
+  const itemsPerPage = projects.length > 10 ? 5 : 10;
 
   useEffect(() => {
     const loadProjects = async () => {

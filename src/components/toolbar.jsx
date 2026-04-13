@@ -17,9 +17,9 @@ const ToolBar = () => {
 
   return (
     <>
-      <div className="w-full flex justify-center pt-4">
+      <div className="w-full flex justify-center pt-4 ">
         {/* MAIN CONTAINER */}
-        <div className="w-full max-w-[95%] md:max-w-[70%] bg-slate-800 rounded-xl p-4 flex flex-col gap-4">
+        <div className="w-full max-w-[95%] md:max-w-[70%] bg-slate-800 rounded-xl p-4 flex flex-col gap-4 border border-gray-700">
           {/* TOP ROW : Search + Button */}
           <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
             {/* Search */}
