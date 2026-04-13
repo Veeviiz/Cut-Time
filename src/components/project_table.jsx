@@ -114,8 +114,8 @@ const ProjectTable = () => {
                 <tr className="text-gray-400 text-sm border-b border-gray-700">
                   <th className="py-3 px-4 text-left">DATE</th>
                   <th className="text-left">PROJECT TITLE</th>
-                  <th className="py-3 px-4">EPISODE</th>
-                  <th className="py-3 px-4">DURATION</th>
+                  <th className="py-3 px-4 text-left">EPISODE</th>
+                  <th className="py-3 px-4 text-left">DURATION</th>
                   <th className="py-3 px-4 text-right">ACTIONS</th>
                 </tr>
               </thead>

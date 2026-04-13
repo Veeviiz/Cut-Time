@@ -6,7 +6,9 @@ import { IoTime } from "react-icons/io5";
 import { MdOutlineNumbers } from "react-icons/md";
 
 const AddNewModal = ({ setOpen, onSuccess, project }) => {
-  const { addProject, updateProject } = useProjects();
+  const { addProject, updateProject, uniqueTitles } = useProjects();
+  const [filtered, setFiltered] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     episode: "",
@@ -143,16 +145,55 @@ const AddNewModal = ({ setOpen, onSuccess, project }) => {
               <div className="relative w-full inline-flex items-center">
                 <FaFilePen className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xl" />
                 <input
-                  name="title"
-                  autoComplete="on"
+                  name="project_title"
+                  autoComplete="off" // ปิดของ browser เพื่อไม่ให้ชนกับของเรา
                   value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="w-full mt-2 mb-2 p-2 rounded-md bg-slate-900 focus:border-sky-500 focus:outline focus:outline-sky-500 pl-10 pr-4"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({ ...formData, title: value });
+
+                    if (!value) {
+                      setFiltered([]);
+                      setShowDropdown(false);
+                      return;
+                    }
+
+                    const result = uniqueTitles.filter((t) =>
+                      t.toLowerCase().includes(value.toLowerCase()),
+                    );
+
+                    setFiltered(result);
+                    setShowDropdown(true);
+                  }}
+                  onBlur={() => {
+                    // delay นิดนึงให้ click ทำงานก่อน dropdown หาย
+                    setTimeout(() => setShowDropdown(false), 150);
+                  }}
+                  onFocus={() => {
+                    if (filtered.length > 0) setShowDropdown(true);
+                  }}
+                  className="w-full mt-2 mb-2 p-2 rounded-md bg-slate-900 pl-10 pr-4"
                   type="text"
                   placeholder="Project title"
                 />
+
+                {showDropdown && filtered.length > 0 && (
+                  <div className="absolute left-0 top-full mt-1  w-full bg-slate-900 rounded-md shadow-lg z-50  max-h-40 overflow-y-auto">
+                    {filtered.map((item, index) => (
+                      <div
+                        key={index}
+                        className="p-2 hover:bg-slate-700 cursor-pointer"
+                        onMouseDown={() => {
+                          // ใช้ onMouseDown แทน onClick กัน blur ก่อน
+                          setFormData({ ...formData, title: item });
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Row */}
