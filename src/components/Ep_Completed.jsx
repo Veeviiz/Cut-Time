@@ -51,9 +51,18 @@ const Ep_Completed = () => {
     return projects.reduce((sum, p) => {
       if (!p.episode) return sum;
 
-      const [start, end] = p.episode.split("-").map(Number);
+      const parts = p.episode.split("-").map((s) => s.trim());
+      const start = Number(parts[0]);
+      const end = parts[1] ? Number(parts[1]) : null;
 
-      if (!end) return sum + start; // เผื่อกรณีมีแค่ตอนเดียว เช่น "5" แทนที่จะเป็น "5-5"
+      if (isNaN(start)) return sum; // ถ้า start ไม่ใช่ตัวเลข ให้ข้ามรายการนี้
+
+      // กรณีมีตัวเดียว เช่น "5"
+      if (end === null || isNaN(end)) {
+        return sum + 1;
+      }
+
+      if (end < start) return sum;
 
       return sum + (end - start + 1);
     }, 0);
