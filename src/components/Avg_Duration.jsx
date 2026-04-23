@@ -24,7 +24,7 @@ const Avg_Duration = () => {
         100;
   return (
     <>
-      <div className="bg-slate-800 border border-gray-700 w-full max-w-full sm:w-full md:w-full lg:w-full h-full pb-4 flex-shrink-0 rounded-md shadow-md ">
+      <div className="bg-slate-900 border border-gray-700 w-full max-w-full sm:w-full md:w-full lg:w-full h-full pb-4 flex-shrink-0 rounded-md shadow-md hover:scale-105 duration-300">
         <div>
           <div className="p-4 flex justify-between h-full">
             <p className="text-gray-400">Avg. Duration</p>

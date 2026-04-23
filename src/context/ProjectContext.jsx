@@ -154,7 +154,10 @@ export const ProjectProvider = ({ children }) => {
       console.error("Delete failed:", err.message);
     }
   };
+  const todayStr = new Date().toLocaleDateString("en-CA"); // "YYYY-MM-DD"
 
+  const todayProjects = projects.filter((p) => p?.date === todayStr);
+  console.log("Today's Projects date:", todayProjects);
   // Average Duration
   const averageDuration =
     filteredProjects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
@@ -176,6 +179,12 @@ export const ProjectProvider = ({ children }) => {
   const uniqueTitles = [
     ...new Set(projects.map((p) => p?.title).filter(Boolean)),
   ];
+
+  const convertToProgress = (minutes) => {
+    const percentage = (minutes / 25) * 100;
+    return Math.min(percentage, 100);
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -201,6 +210,8 @@ export const ProjectProvider = ({ children }) => {
         averageDuration,
         lastMonthProjects,
         loading,
+        convertToProgress,
+        todayProjects,
       }}
     >
       {children}

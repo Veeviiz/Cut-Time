@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X, Home, Folder, Settings } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { PiFilmSlateFill } from "react-icons/pi";
-
+import { LuFileVideo } from "react-icons/lu";
 export default function SidebarLayout() {
   // mobile open/close
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function SidebarLayout() {
 
   const menuItems = [
     { name: "Dashboard", icon: Home, link: "/" },
-    { name: "Projects", icon: Folder, link: "/projects" },
+    { name: "Videos", icon: LuFileVideo, link: "/projects" },
     { name: "Settings", icon: Settings, link: "/settings" },
   ];
 

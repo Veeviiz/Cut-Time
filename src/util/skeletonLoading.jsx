@@ -67,7 +67,7 @@ export function MobileSkeleton() {
 
 export function StatCardSkeleton() {
   return (
-    <div className="animate-pulse bg-slate-800 rounded-xl p-5 space-y-4">
+    <div className="animate-pulse bg-slate-900 rounded-xl p-5 space-y-4">
       <div className="h-4 w-1/3 bg-slate-600 rounded"></div>
       <div className="h-8 w-1/2 bg-slate-600 rounded"></div>
       <div className="h-3 w-1/4 bg-slate-600 rounded"></div>
