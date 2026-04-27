@@ -6,11 +6,12 @@ import Total_hours from "../components/Total_hours";
 import Total_earning from "../components/Total_earning";
 import Avg_Duration from "../components/Avg_Duration";
 import Daily_tasks from "../components/Daily_tasks";
-
+import { BarChart } from "@mui/x-charts/BarChart";
+import PieChartData from "../components/PieChartData";
+import BarChartData from "../components/BarChartData";
 const DashboardContent = () => {
   const { selectedMonth, setSelectedMonth, loading } = useProjects();
 
-  console.log(localStorage);
   return (
     <div className="w-full text-white">
       <div className="mx-auto pt-8 px-4">
@@ -18,7 +19,7 @@ const DashboardContent = () => {
         <Daily_tasks />
         <div className="w-full py-4 bg-slate-800 border border-gray-700 w-full max-w-full sm:w-full md:w-full lg:w-full h-full pb-4 flex-shrink-0 rounded-md shadow-md my-4 px-4">
           <div className="flex justify-between items-center mb-6 flex-col md:flex-row gap-4 ">
-            <h1 className="text-4xl font-bold">Dashboard</h1>
+            <h1 className="text-4xl font-bold">Overview</h1>
 
             <div className="flex gap-4 items-center text-sm md:text-base">
               <span className="text-zinc-400">Monthly Summary</span>
@@ -49,6 +50,11 @@ const DashboardContent = () => {
                 <Avg_Duration />
               </>
             )}
+          </div>
+          {/* Additional content can be added here */}
+          <div className="mt-8 flex flex-col md:flex-row gap-8">
+            <PieChartData />
+            <BarChartData />
           </div>
         </div>
       </div>

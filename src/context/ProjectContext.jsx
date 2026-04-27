@@ -18,7 +18,7 @@ export const ProjectProvider = ({ children }) => {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   };
 
-  console.log(getCurrentMonth());
+  console.log(projects);
 
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
   const itemsPerPage = projects.length > 10 ? 5 : 10;
@@ -76,6 +76,7 @@ export const ProjectProvider = ({ children }) => {
   const sortedProjects = [...filteredProjects].sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
@@ -179,7 +180,34 @@ export const ProjectProvider = ({ children }) => {
   const uniqueTitles = [
     ...new Set(projects.map((p) => p?.title).filter(Boolean)),
   ];
+  const totalDuration = filteredProjects.reduce((sum, p) => {
+    return sum + Number(p.duration || 0);
+  }, 0);
+  const totalMinutesRaw = totalDuration / 60;
+  const totalMinutes = Number(totalMinutesRaw.toFixed(2));
+  console.log(totalMinutes);
+  const totalPrice = totalMinutes * 20;
 
+  const lastMonthEarning = lastMonthProjects.reduce((sum, p) => {
+    const minutes = Number(p.duration || 0) / 60;
+    return sum + minutes * 20;
+  }, 0);
+
+  const percentChange =
+    lastMonthEarning === 0
+      ? 0
+      : ((totalPrice - lastMonthEarning) / lastMonthEarning) * 100;
+
+  const priceEverymonth = projects.reduce((acc, p) => {
+    if (!p || !p.date) return acc;
+    const d = new Date(p.date);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const minutes = Number(p.duration || 0) / 60;
+    const price = minutes * 20;
+    acc[key] = (acc[key] || 0) + price;
+    return acc;
+  }, {});
+  console.log(priceEverymonth);
   const convertToProgress = (minutes) => {
     const percentage = (minutes / 25) * 100;
     return Math.min(percentage, 100);
@@ -212,6 +240,10 @@ export const ProjectProvider = ({ children }) => {
         loading,
         convertToProgress,
         todayProjects,
+        percentChange,
+        lastMonthEarning,
+        totalPrice,
+        priceEverymonth,
       }}
     >
       {children}

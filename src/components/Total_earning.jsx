@@ -3,7 +3,7 @@ import { useProjects } from "../context/ProjectContext";
 import NumberAnimate from "../util/NumberAnimate";
 import { MdMonetizationOn } from "react-icons/md";
 const Total_earning = () => {
-  const { filteredProjects, lastMonthProjects } = useProjects();
+  const { percentChange, lastMonthEarning, totalPrice } = useProjects();
   // const now = new Date();
   // const currentMonth = now.getMonth();
   // const currentYear = now.getFullYear();
@@ -15,23 +15,23 @@ const Total_earning = () => {
   // });
 
   // console.log(currentMonthProjects);
-  const totalDuration = filteredProjects.reduce((sum, p) => {
-    return sum + Number(p.duration || 0);
-  }, 0);
-  const totalMinutesRaw = totalDuration / 60;
-  const totalMinutes = Number(totalMinutesRaw.toFixed(2));
-  console.log(totalMinutes);
-  const totalPrice = totalMinutes * 20;
+  // const totalDuration = filteredProjects.reduce((sum, p) => {
+  //   return sum + Number(p.duration || 0);
+  // }, 0);
+  // const totalMinutesRaw = totalDuration / 60;
+  // const totalMinutes = Number(totalMinutesRaw.toFixed(2));
+  // console.log(totalMinutes);
+  // const totalPrice = totalMinutes * 20;
 
-  const lastMonthEarning = lastMonthProjects.reduce((sum, p) => {
-    const minutes = Number(p.duration || 0) / 60;
-    return sum + minutes * 20;
-  }, 0);
+  // const lastMonthEarning = lastMonthProjects.reduce((sum, p) => {
+  //   const minutes = Number(p.duration || 0) / 60;
+  //   return sum + minutes * 20;
+  // }, 0);
 
-  const percentChange =
-    lastMonthEarning === 0
-      ? 0
-      : ((totalPrice - lastMonthEarning) / lastMonthEarning) * 100;
+  // const percentChange =
+  //   lastMonthEarning === 0
+  //     ? 0
+  //     : ((totalPrice - lastMonthEarning) / lastMonthEarning) * 100;
   return (
     <>
       <div className="bg-slate-900 border border-gray-700 w-full max-w-full sm:w-full md:w-full lg:w-full h-full pb-4 flex-shrink-0 rounded-md shadow-md hover:scale-105 duration-300">
