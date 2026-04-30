@@ -1,7 +1,7 @@
 import React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useProjects } from "../context/ProjectContext";
-
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 const BarChartData = () => {
   const { priceEverymonth } = useProjects();
 
@@ -21,7 +21,11 @@ const BarChartData = () => {
   const values = sortedEntries.map(([, value]) => Math.round(value));
 
   return (
-    <div className="w-full h-64 md:h-96">
+    <div className="w-full h-64 md:h-96 bg-slate-900 rounded-md p-4 border border-gray-700">
+      <div className="flex items-center justify-start ">
+        <RiMoneyDollarCircleFill className="text-2xl mr-2" />
+        <h1>สรุปรายเดือน</h1>
+      </div>
       <BarChart
         xAxis={[
           {
@@ -46,7 +50,7 @@ const BarChartData = () => {
         series={[
           {
             data: values,
-            label: "Earnings",
+
             valueFormatter: (v) => `${v.toLocaleString()} ฿`,
           },
         ]}
@@ -64,9 +68,9 @@ const BarChartData = () => {
             fontSize: 12,
             fontFamily: "Kanit, sans-serif",
           },
-          backgroundColor: "oklch(0.208 0.042 265.755)",
+          // backgroundColor: "oklch(0.208 0.042 265.755)",
           borderRadius: 2,
-          border: "1px solid oklch(0.373 0.034 259.733)",
+          // border: "1px solid oklch(0.373 0.034 259.733)",
           p: 2,
 
           "& .MuiChartsLegend-root": {

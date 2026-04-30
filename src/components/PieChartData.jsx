@@ -1,40 +1,43 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { MdMovie } from "react-icons/md";
 const PieChartData = () => {
-  const { projects } = useProjects();
-
-  // แยกชื่อโปรเจกต์และรวมตอนของแต่ละโปรเจกต์
-  const projectEpCount = {};
-  projects.forEach((p) => {
-    if (!p?.title || !p?.episode) return;
-
-    // แยกช่วงตอน
-    const [start, end] = p.episode.split("-").map(Number);
-
-    let count = 0;
-
-    if (!isNaN(start) && !isNaN(end)) {
-      count = end - start + 1;
-    } else if (!isNaN(start)) {
-      count = 1; // กรณี "48"
-    }
-
-    if (!projectEpCount[p.title]) {
-      projectEpCount[p.title] = 0;
-    }
-
-    projectEpCount[p.title] += count;
-  });
-  console.log(projectEpCount);
+  const { selectedEpCount } = useProjects();
 
   return (
     <>
-      <div className="w-full h-64 md:h-96">
+      <div className="w-full h-64 md:h-96 bg-slate-900 rounded-md p-4 border border-gray-700">
+        <div className="flex items-center justify-between ">
+          <div className="flex items-center justify-start ">
+            <MdMovie className="text-2xl mr-2" />
+            <h1>จำนวนตอนของแต่ละเรื่อง</h1>
+          </div>
+
+          {/* <div className="relative">
+            <select
+              className="appearance-none bg-slate-900 text-white px-3  pr-10 rounded-md focus:outline focus:outline-sky-500 w-full md:w-auto"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value="">ทุกเดือน</option>
+
+              {monthOptions.map((month) => (
+                <option key={month.value} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </select>
+
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
+              ▼
+            </span>
+          </div> */}
+        </div>
         <PieChart
           series={[
             {
-              data: Object.entries(projectEpCount).map(
+              data: Object.entries(selectedEpCount).map(
                 ([label, value], index) => ({
                   id: index,
                   label,
@@ -57,15 +60,15 @@ const PieChartData = () => {
                 additionalRadius: 5,
               },
 
-              valueFormatter: (item) => `${item.value} EP`,
+              valueFormatter: (item) => `${item.value} ตอน`,
             },
           ]}
           sx={{
             width: "100%",
             height: "100%",
-            backgroundColor: "oklch(0.208 0.042 265.755)",
+            // backgroundColor: "oklch(0.208 0.042 265.755)",
             borderRadius: 2,
-            border: "1px solid oklch(0.373 0.034 259.733)",
+            // border: "1px solid oklch(0.373 0.034 259.733)",
             p: 2,
             display: "flex",
             flexDirection: "column",
@@ -73,10 +76,10 @@ const PieChartData = () => {
               color: "#ffffff",
               display: "flex",
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "start",
               fontFamily: "Kanit, sans-serif",
 
-              // 👇 ซ่อนเมื่อจอเล็ก (mobile)
+              //  ซ่อนเมื่อจอเล็ก (mobile)
               "@media (max-width:600px)": {
                 display: "none",
               },

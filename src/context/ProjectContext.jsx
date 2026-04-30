@@ -57,6 +57,8 @@ export const ProjectProvider = ({ children }) => {
     const d = new Date(p.date);
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
+
+  // กรองโปรเจกต์ตามการค้นหาและการเลือกโปรเจกต์
   const filteredProjects = monthFilterProjects.filter((p) => {
     if (!p || !p.date) return false;
     const keyword = search.toLowerCase();
@@ -212,7 +214,62 @@ export const ProjectProvider = ({ children }) => {
     const percentage = (minutes / 25) * 100;
     return Math.min(percentage, 100);
   };
+  // สร้างตัวเลือกเดือนจากข้อมูลโปรเจกต์
+  const getMonthsByProject = (projects) => {
+    const monthMap = new Map();
 
+    projects.forEach((p) => {
+      if (!p?.date) return;
+
+      const d = new Date(p.date);
+
+      const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+
+      // กันซ้ำ
+      if (!monthMap.has(value)) {
+        const label = d.toLocaleString("en-US", {
+          month: "short",
+          year: "numeric",
+        });
+
+        monthMap.set(value, label);
+      }
+    });
+
+    // แปลงเป็น array + sort ใหม่ (ล่าสุดก่อน)
+    return Array.from(monthMap.entries())
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => b.value.localeCompare(a.value));
+  };
+
+  const monthOptions = getMonthsByProject(projects); // ย้อนหลัง 12 เดือน
+
+  // แยกชื่อโปรเจกต์และรวมตอนของแต่ละโปรเจกต์
+  const projectEpCount = {};
+  const monthfilterProjectsEpCount = {};
+
+  projects.forEach((p) => {
+    if (!p?.title || !p?.episode || !p?.date) return;
+
+    const [start, end] = p.episode.split("-").map(Number);
+
+    let count = 0;
+    if (!isNaN(start) && !isNaN(end)) {
+      count = end - start + 1;
+    } else if (!isNaN(start)) {
+      count = 1;
+    }
+
+    const d = new Date(p.date);
+    const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+
+    // ถ้าไม่ได้เลือกเดือน → เอาทั้งหมด
+    if (!selectedMonth || selectedMonth === monthKey) {
+      projectEpCount[p.title] = (projectEpCount[p.title] || 0) + count;
+    }
+  });
+  const selectedEpCount =
+    selectedMonth === "current" ? monthfilterProjectsEpCount : projectEpCount;
   return (
     <ProjectContext.Provider
       value={{
@@ -244,6 +301,8 @@ export const ProjectProvider = ({ children }) => {
         lastMonthEarning,
         totalPrice,
         priceEverymonth,
+        selectedEpCount,
+        monthOptions,
       }}
     >
       {children}
