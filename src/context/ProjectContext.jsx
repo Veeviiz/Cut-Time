@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { supabase } from "../service/supabaseClient";
+import { computeAggregates, toMonthKey } from "../util/helpers";
 
 const ProjectContext = createContext();
 
@@ -18,80 +19,80 @@ export const ProjectProvider = ({ children }) => {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   };
 
-  console.log(projects);
-
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
+  const [defaultMonthSet, setDefaultMonthSet] = useState(false);
   const itemsPerPage = projects.length > 10 ? 5 : 10;
 
   useEffect(() => {
     const loadProjects = async () => {
       setLoading(true);
-
       const { data, error } = await supabase.from("videos").select("*");
-      if (error) {
-        console.error("Supabase error", error);
-      } else {
-        setProjects(data);
-      }
+      if (error) console.error("Supabase error", error);
+      else setProjects(data || []);
       setLoading(false);
     };
     loadProjects();
   }, []);
 
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-
-  const monthFilterProjects = projects.filter((p) => {
-    if (!p || !p.date) return false;
-    if (!selectedMonth) return true;
-
-    const d = new Date(p.date);
-    const [year, month] = selectedMonth.split("-").map(Number);
-
-    return d.getFullYear() === year && d.getMonth() === month - 1;
-  });
-
-  const currentMonthProjects = projects.filter((p) => {
-    if (!p || !p.date) return false;
-    const d = new Date(p.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  });
-
-  // กรองโปรเจกต์ตามการค้นหาและการเลือกโปรเจกต์
-  const filteredProjects = monthFilterProjects.filter((p) => {
-    if (!p || !p.date) return false;
-    const keyword = search.toLowerCase();
-    const thaiDate = new Date(p.date).toLocaleDateString("th-TH");
-
-    const matchSearch =
-      String(p.title).toLowerCase().includes(keyword) ||
-      String(p.episode).toLowerCase().includes(keyword) ||
-      String(p.date).includes(keyword) ||
-      thaiDate.includes(keyword);
-
-    const matchSelect =
-      !selectedProjectTitle || p.title === selectedProjectTitle;
-
-    return matchSearch && matchSelect;
-  });
-  const sortedProjects = [...filteredProjects].sort(
-    (a, b) => new Date(b.date) - new Date(a.date),
+  useEffect(
+    () => setCurrentPage(1),
+    [search, selectedProjectTitle, selectedMonth],
   );
+
+  // derive all useful values in a single pass via computeAggregates helper
+  const derived = useMemo(() => {
+    return computeAggregates(projects, {
+      selectedMonth,
+      selectedProjectTitle,
+      search,
+      todayKey: new Date().toLocaleDateString("en-CA"),
+    });
+  }, [projects, selectedMonth, selectedProjectTitle, search]);
+
+  const {
+    uniqueTitles,
+    sortedProjects,
+    averageDuration,
+    lastMonthProjects,
+    currentMonthProjects,
+    todayProjects,
+    percentChange,
+    lastMonthEarning,
+    totalPrice,
+    priceEverymonth,
+    projectEpCount,
+    lastProjectDate,
+    monthOptions,
+  } = derived;
+
+  // when projects load first time, default selectedMonth to the month of the latest project
+  useEffect(() => {
+    if (defaultMonthSet) return;
+    if (!projects || projects.length === 0) return;
+
+    if (
+      lastProjectDate &&
+      lastProjectDate.getTime &&
+      lastProjectDate.getTime() > 0
+    ) {
+      setSelectedMonth(toMonthKey(lastProjectDate));
+    } else if (monthOptions && monthOptions.length > 0) {
+      setSelectedMonth(monthOptions[0].value);
+    }
+
+    setDefaultMonthSet(true);
+  }, [projects, lastProjectDate, monthOptions, defaultMonthSet]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const currentProjects = sortedProjects.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
-
-  const totalPages = Math.ceil(sortedProjects.length / itemsPerPage);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, selectedProjectTitle, selectedMonth]);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedProjects.length / itemsPerPage),
+  );
 
   // useEffect(() => {
   //   const data = [];
@@ -157,119 +158,8 @@ export const ProjectProvider = ({ children }) => {
       console.error("Delete failed:", err.message);
     }
   };
-  const todayStr = new Date().toLocaleDateString("en-CA"); // "YYYY-MM-DD"
-
-  const todayProjects = projects.filter((p) => p?.date === todayStr);
-  console.log("Today's Projects date:", todayProjects);
-  // Average Duration
-  const averageDuration =
-    filteredProjects.reduce((sum, p) => sum + Number(p.duration || 0), 0) /
-      filteredProjects.length || 0;
-
-  const [year, month] = selectedMonth.split("-").map(Number);
-  const selectedMonthIndex = month - 1;
-
-  const lastMonthProjects = projects.filter((p) => {
-    if (!p || !p.date) return false;
-
-    const d = new Date(p.date);
-
-    const lastMonth = selectedMonthIndex === 0 ? 11 : selectedMonthIndex - 1;
-    const lastMonthYear = selectedMonthIndex === 0 ? year - 1 : year;
-
-    return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
-  });
-  const uniqueTitles = [
-    ...new Set(projects.map((p) => p?.title).filter(Boolean)),
-  ];
-  const totalDuration = filteredProjects.reduce((sum, p) => {
-    return sum + Number(p.duration || 0);
-  }, 0);
-  const totalMinutesRaw = totalDuration / 60;
-  const totalMinutes = Number(totalMinutesRaw.toFixed(2));
-  console.log(totalMinutes);
-  const totalPrice = totalMinutes * 20;
-
-  const lastMonthEarning = lastMonthProjects.reduce((sum, p) => {
-    const minutes = Number(p.duration || 0) / 60;
-    return sum + minutes * 20;
-  }, 0);
-
-  const percentChange =
-    lastMonthEarning === 0
-      ? 0
-      : ((totalPrice - lastMonthEarning) / lastMonthEarning) * 100;
-
-  const priceEverymonth = projects.reduce((acc, p) => {
-    if (!p || !p.date) return acc;
-    const d = new Date(p.date);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const minutes = Number(p.duration || 0) / 60;
-    const price = minutes * 20;
-    acc[key] = (acc[key] || 0) + price;
-    return acc;
-  }, {});
-  console.log(priceEverymonth);
-  const convertToProgress = (minutes) => {
-    const percentage = (minutes / 25) * 100;
-    return Math.min(percentage, 100);
-  };
-  // สร้างตัวเลือกเดือนจากข้อมูลโปรเจกต์
-  const getMonthsByProject = (projects) => {
-    const monthMap = new Map();
-
-    projects.forEach((p) => {
-      if (!p?.date) return;
-
-      const d = new Date(p.date);
-
-      const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-
-      // กันซ้ำ
-      if (!monthMap.has(value)) {
-        const label = d.toLocaleString("en-US", {
-          month: "short",
-          year: "numeric",
-        });
-
-        monthMap.set(value, label);
-      }
-    });
-
-    // แปลงเป็น array + sort ใหม่ (ล่าสุดก่อน)
-    return Array.from(monthMap.entries())
-      .map(([value, label]) => ({ value, label }))
-      .sort((a, b) => b.value.localeCompare(a.value));
-  };
-
-  const monthOptions = getMonthsByProject(projects); // ย้อนหลัง 12 เดือน
-
-  // แยกชื่อโปรเจกต์และรวมตอนของแต่ละโปรเจกต์
-  const projectEpCount = {};
-  const monthfilterProjectsEpCount = {};
-
-  projects.forEach((p) => {
-    if (!p?.title || !p?.episode || !p?.date) return;
-
-    const [start, end] = p.episode.split("-").map(Number);
-
-    let count = 0;
-    if (!isNaN(start) && !isNaN(end)) {
-      count = end - start + 1;
-    } else if (!isNaN(start)) {
-      count = 1;
-    }
-
-    const d = new Date(p.date);
-    const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-
-    // ถ้าไม่ได้เลือกเดือน → เอาทั้งหมด
-    if (!selectedMonth || selectedMonth === monthKey) {
-      projectEpCount[p.title] = (projectEpCount[p.title] || 0) + count;
-    }
-  });
-  const selectedEpCount =
-    selectedMonth === "current" ? monthfilterProjectsEpCount : projectEpCount;
+  const convertToProgress = (minutes) => Math.min((minutes / 25) * 100, 100);
+  const selectedEpCount = projectEpCount;
   return (
     <ProjectContext.Provider
       value={{
@@ -286,7 +176,7 @@ export const ProjectProvider = ({ children }) => {
         totalPages,
         indexOfLastItem,
         indexOfFirstItem,
-        filteredProjects,
+        filteredProjects: sortedProjects,
         selectedProjectTitle,
         setSelectedProjectTitle,
         currentMonthProjects,

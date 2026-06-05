@@ -7,8 +7,6 @@ const Avg_Duration = () => {
 
   const averageMinutes = averageDuration / 60;
 
-  console.log(averageDuration);
-
   const lastMonthAverageDuration =
     lastMonthProjects.reduce((sum, p) => {
       return sum + Number(p.duration || 0);

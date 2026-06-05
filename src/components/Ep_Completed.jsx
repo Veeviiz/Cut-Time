@@ -44,8 +44,6 @@ const Ep_Completed = () => {
     }
   }, 0);
 
-  console.log("Total Episodes:", totalEpisodes);
-
   // ฟังก์ชันนับจำนวนตอนจากรายการโปรเจกต์
   function countEpisodes(projects) {
     return projects.reduce((sum, p) => {
@@ -70,8 +68,6 @@ const Ep_Completed = () => {
   const currentEpisodes = countEpisodes(filteredProjects);
   const lastMonthEpisodes = countEpisodes(lastMonthProjects);
 
-  console.log(`Current month episodes: ${currentEpisodes}`);
-  console.log(`Last month episodes: ${lastMonthEpisodes}`);
   const percentChange =
     lastMonthEpisodes === 0
       ? currentEpisodes > 0

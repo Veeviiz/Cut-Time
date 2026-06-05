@@ -22,7 +22,7 @@ const TotalTime = () => {
   const minutes = Math.floor((totalDuration % 3600) / 60);
   const totalMinutesRaw = totalDuration / 60;
   const totalMinutes = Number(totalMinutesRaw.toFixed(2));
-  console.log(totalMinutes);
+
   const totalPrice = totalMinutes * 20;
 
   return (
