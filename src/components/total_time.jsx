@@ -1,6 +1,7 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
 import { BsFillStopwatchFill } from "react-icons/bs";
+import { projectPrice } from "../util/helpers";
 const TotalTime = () => {
   const { projects } = useProjects();
 
@@ -23,7 +24,10 @@ const TotalTime = () => {
   const totalMinutesRaw = totalDuration / 60;
   const totalMinutes = Number(totalMinutesRaw.toFixed(2));
 
-  const totalPrice = totalMinutes * 20;
+  const totalPrice = currentMonthProjects.reduce(
+    (sum, project) => sum + projectPrice(project),
+    0,
+  );
 
   return (
     <>

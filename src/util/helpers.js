@@ -20,9 +20,18 @@ export const durationSecondsToMinutes = (seconds) => {
   return s / 60;
 };
 
-export const minutesToPrice = (minutes, rate = 20) => {
+export const LEGACY_RATE = 20;
+export const DEFAULT_RATE = 17;
+
+export const minutesToPrice = (minutes, rate = DEFAULT_RATE) => {
   return minutes * rate;
 };
+
+export const projectPrice = (project) =>
+  minutesToPrice(
+    durationSecondsToMinutes(project?.duration),
+    Number(project?.rate ?? LEGACY_RATE),
+  );
 
 export const clampProgress = (minutes, period = 25) =>
   Math.min((minutes / period) * 100, 100);
@@ -65,9 +74,7 @@ export const computeAggregates = (
       const key = toMonthKey(d);
       if (!monthMap.has(key)) monthMap.set(key, formatMonthLabel(key));
 
-      const minutes = durationSecondsToMinutes(p.duration);
-      priceEverymonth[key] =
-        (priceEverymonth[key] || 0) + minutesToPrice(minutes);
+      priceEverymonth[key] = (priceEverymonth[key] || 0) + projectPrice(p);
 
       if (p.date === today) todayProjects.push(p);
       if (d.getMonth() === currentMonthIdx && d.getFullYear() === currentYear)
@@ -110,10 +117,10 @@ export const computeAggregates = (
   );
   const averageDuration = filtered.length ? totalDuration / filtered.length : 0;
   const totalMinutes = Number((totalDuration / 60).toFixed(2));
-  const totalPrice = minutesToPrice(totalMinutes);
+  const totalPrice = filtered.reduce((sum, project) => sum + projectPrice(project), 0);
 
   const lastMonthEarning = lastMonthProjects.reduce(
-    (sum, p) => sum + minutesToPrice(durationSecondsToMinutes(p.duration)),
+    (sum, project) => sum + projectPrice(project),
     0,
   );
   const percentChange =
