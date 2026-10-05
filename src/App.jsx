@@ -6,7 +6,7 @@ import { Link, Route, Routes, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Home";
-import LoginPage from "./pages/LoginPage";
+import Timesum from "./pages/Timesum";
 import SideBar from "./components/SideBar";
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
         <Route path="/" element={<SideBar />}>
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="timesum" element={<Timesum />} />
         </Route>
       </Routes>
     </>

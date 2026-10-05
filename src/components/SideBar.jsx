@@ -13,7 +13,7 @@ export default function SidebarLayout() {
   const menuItems = [
     { name: "Dashboard", icon: Home, link: "/" },
     { name: "Videos", icon: LuFileVideo, link: "/projects" },
-    { name: "Settings", icon: Settings, link: "/settings" },
+    { name: "Timesum", icon: Settings, link: "/timesum" },
   ];
 
   return (

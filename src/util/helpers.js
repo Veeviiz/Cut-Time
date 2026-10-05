@@ -24,7 +24,8 @@ export const LEGACY_RATE = 20;
 export const DEFAULT_RATE = 17;
 
 export const minutesToPrice = (minutes, rate = DEFAULT_RATE) => {
-  return minutes * rate;
+  const price = minutes * rate;
+  return price - price * 0.03;
 };
 
 export const projectPrice = (project) =>
