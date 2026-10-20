@@ -5,11 +5,13 @@ import ProjectTable from "../components/project_table";
 import { ProjectProvider } from "../context/ProjectContext";
 const Home = () => {
   return (
-    <div>
+    <div className="w-full text-white">
+      <div className="mx-auto pt-4 px-4">
       <ProjectProvider>
         <ToolBar />
         <ProjectTable />
       </ProjectProvider>
+      </div>
     </div>
   );
 };

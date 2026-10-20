@@ -1,7 +1,7 @@
 import React from "react";
 import { BsFillStopwatchFill } from "react-icons/bs";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import NumberAnimate from "../util/NumberAnimate";
+import NumberAnimate from "../utils/NumberAnimate";
 import { useProjects } from "../context/ProjectContext";
 const Ep_Completed = () => {
   const { filteredProjects, lastMonthProjects } = useProjects();

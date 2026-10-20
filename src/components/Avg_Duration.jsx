@@ -1,6 +1,6 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
-import NumberAnimate from "../util/NumberAnimate";
+import NumberAnimate from "../utils/NumberAnimate";
 import { RiTimerLine } from "react-icons/ri";
 const Avg_Duration = () => {
   const { averageDuration, lastMonthProjects } = useProjects();

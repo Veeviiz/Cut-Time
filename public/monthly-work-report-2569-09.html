@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>สรุปการทำงานประจำเดือน กันยายน 2569</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background: #eef2f7;
+        color: #172033;
+        font-family: "Leelawadee UI", Tahoma, sans-serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page {
+        position: relative;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 20mm 19mm 17mm;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 20px;
+        color: #4361ee;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+      }
+
+      .topline::before {
+        width: 28px;
+        height: 3px;
+        border-radius: 4px;
+        background: #4361ee;
+        content: "";
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 29px;
+        line-height: 1.35;
+        letter-spacing: -0.6px;
+      }
+
+      .subtitle {
+        margin: 5px 0 24px;
+        color: #68738a;
+        font-size: 15px;
+      }
+
+      .date-card {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-bottom: 22px;
+        border: 1px solid #e1e7f0;
+        border-radius: 12px;
+        background: #f8faff;
+      }
+
+      .date-cell {
+        padding: 15px 18px;
+      }
+
+      .date-cell + .date-cell {
+        border-left: 1px solid #e1e7f0;
+      }
+
+      .label {
+        display: block;
+        margin-bottom: 6px;
+        color: #758099;
+        font-size: 11px;
+      }
+
+      .date-value {
+        color: #202c45;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 13px;
+        margin-bottom: 27px;
+      }
+
+      .metric {
+        min-height: 98px;
+        padding: 17px 19px;
+        border-radius: 12px;
+        background: #f3f5ff;
+      }
+
+      .metric.minutes {
+        background: #eef9f6;
+      }
+
+      .metric-label {
+        color: #626e87;
+        font-size: 12px;
+      }
+
+      .metric-value {
+        margin-top: 5px;
+        color: #3449bd;
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .minutes .metric-value {
+        color: #12806c;
+      }
+
+      .metric-note {
+        margin-top: 3px;
+        color: #68738a;
+        font-size: 12px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 17px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: #f3f5fa;
+      }
+
+      th {
+        padding: 11px 12px;
+        color: #63708a;
+        font-size: 11px;
+        font-weight: 700;
+        text-align: left;
+      }
+
+      td {
+        padding: 13px 12px;
+        border-bottom: 1px solid #e9edf3;
+        font-size: 13px;
+      }
+
+      th:last-child,
+      td:last-child {
+        text-align: right;
+      }
+
+      .project-name {
+        color: #202c45;
+        font-weight: 700;
+      }
+
+      .episode-range {
+        color: #5d6982;
+      }
+
+      .count {
+        color: #3449bd;
+        font-weight: 700;
+      }
+
+      .total-line {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 13px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #f3f5ff;
+        color: #3449bd;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .notice {
+        margin-top: 19px;
+        padding: 12px 14px;
+        border: 1px solid #f2dfad;
+        border-radius: 8px;
+        background: #fffaf0;
+        color: #725b27;
+        font-size: 11px;
+        line-height: 1.7;
+      }
+
+      .notice strong {
+        color: #604916;
+      }
+
+      .footer {
+        position: absolute;
+        right: 19mm;
+        bottom: 13mm;
+        left: 19mm;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 10px;
+        border-top: 1px solid #e7ebf1;
+        color: #8992a4;
+        font-size: 10px;
+      }
+
+      @media print {
+        html,
+        body {
+          width: 210mm;
+          height: 297mm;
+          background: #fff;
+        }
+
+        .page {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="topline">MONTHLY WORK REPORT</div>
+      <h1>สรุปการทำงานประจำเดือน</h1>
+      <p class="subtitle">รายงานผลงานประจำเดือนกันยายน พ.ศ. 2569</p>
+
+      <section class="date-card" aria-label="ช่วงเวลารายงาน">
+        <div class="date-cell">
+          <span class="label">เริ่มต้นเดือน</span>
+          <span class="date-value">1 กันยายน 2569</span>
+        </div>
+        <div class="date-cell">
+          <span class="label">สิ้นสุดเดือน</span>
+          <span class="date-value">30 กันยายน 2569</span>
+        </div>
+        <div class="date-cell">
+          <span class="label">วันที่จัดทำรายงาน</span>
+          <span class="date-value">30 กันยายน 2569</span>
+        </div>
+      </section>
+
+      <section class="summary" aria-label="สรุปผลการทำงาน">
+        <div class="metric">
+          <div class="metric-label">วันที่ทำงาน</div>
+          <div class="metric-value">27 / 30 วัน</div>
+          <div class="metric-note">จากจำนวนวันทั้งหมดในเดือน</div>
+        </div>
+        <div class="metric minutes">
+          <div class="metric-label">เวลาที่ใช้ตัดคลิป</div>
+          <div class="metric-value">902 นาที</div>
+          <div class="metric-note">เท่ากับ 15 ชั่วโมง 2 นาที</div>
+        </div>
+      </section>
+
+      <section aria-labelledby="work-heading">
+        <h2 id="work-heading">รายงานการทำงาน</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ผลงาน</th>
+              <th>ช่วงตอน</th>
+              <th>จำนวนตอน</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="project-name">หมอเทพสุดเกรียนของเทพธิดา</td>
+              <td class="episode-range">253–282</td>
+              <td class="count">30 ตอน</td>
+            </tr>
+            <tr>
+              <td class="project-name">เทพยาสูงสุด</td>
+              <td class="episode-range">109–133</td>
+              <td class="count">25 ตอน</td>
+            </tr>
+            <tr>
+              <td class="project-name">Reborn</td>
+              <td class="episode-range">1–30</td>
+              <td class="count">30 ตอน</td>
+            </tr>
+            <tr>
+              <td class="project-name">บัลลังก์เขยจักรพรรดิ</td>
+              <td class="episode-range">5–80</td>
+              <td class="count">76 ตอน</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="total-line">
+          <span>รวมจำนวนตอนตามที่แจ้ง</span>
+          <span>164 ตอน</span>
+        </div>
+        <div class="notice">
+          <strong>หมายเหตุ:</strong>
+          เมื่อนับรวมช่วงตอนของแต่ละรายการแบบรวมตอนต้นและตอนท้าย จะได้ 161 ตอน
+          ซึ่งต่างจากยอดรวมที่แจ้ง 164 ตอนอยู่ 3 ตอน รายงานนี้คงยอดรวมตามข้อมูลที่แจ้งไว้
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>รายงานสรุปผลงานประจำเดือน · กันยายน 2569</span>
+        <span>จัดทำวันที่ 30/9/69</span>
+      </footer>
+    </main>
+  </body>
+</html>

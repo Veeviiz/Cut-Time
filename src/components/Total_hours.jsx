@@ -1,7 +1,7 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
 import { BsFillStopwatchFill } from "react-icons/bs";
-import NumberAnimate from "../util/NumberAnimate";
+import NumberAnimate from "../utils/NumberAnimate";
 const Total_hours = () => {
   const { filteredProjects, lastMonthProjects } = useProjects();
 

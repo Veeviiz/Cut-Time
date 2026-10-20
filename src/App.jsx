@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Home";
 import Timesum from "./pages/Timesum";
 import SideBar from "./components/SideBar";
+import { MonthlyReport } from "./pages/MonthlyReport";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="timesum" element={<Timesum />} />
+          <Route path="monthly-report" element={<MonthlyReport />} />
         </Route>
       </Routes>
     </>

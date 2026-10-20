@@ -1,7 +1,7 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
 import { BsFillStopwatchFill } from "react-icons/bs";
-import { projectPrice } from "../util/helpers";
+import { projectPrice } from "../utils/helpers";
 const TotalTime = () => {
   const { projects } = useProjects();
 

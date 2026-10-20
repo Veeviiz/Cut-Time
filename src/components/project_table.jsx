@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useProjects } from "../context/ProjectContext";
 import { IoTrashBinOutline } from "react-icons/io5";
 import { BiEdit } from "react-icons/bi";
-import { MobileSkeleton, TableSkeleton } from "../util/skeletonLoading";
+import { MobileSkeleton, TableSkeleton } from "../utils/skeletonLoading";
 import AddNewModal from "./add_new_modal";
 const ProjectTable = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -59,13 +59,13 @@ const ProjectTable = () => {
   return (
     <>
       <div className="w-full flex justify-center mt-6 mb-10">
-        <div className="w-full max-w-[95%] md:max-w-[70%] rounded-t-lg text-white">
+        <div className="w-full max-w-[95%] rounded-t-lg text-white">
           {/* Mobile list view (small screens) */}
           <div className="block md:hidden space-y-3">
             {currentProjects.map((p) => (
               <div
                 key={p.id}
-                className="bg-slate-900 border border-gray-800 rounded-lg p-4 flex flex-col gap-2"
+                className="bg-slate-900 border border-gray-800 rounded-md p-4 flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-gray-400">

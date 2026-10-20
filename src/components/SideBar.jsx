@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Home, Folder, Settings } from "lucide-react";
+import { Menu, X, Home, Settings, FileChartColumn } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { PiFilmSlateFill } from "react-icons/pi";
 import { LuFileVideo } from "react-icons/lu";
@@ -14,6 +14,7 @@ export default function SidebarLayout() {
     { name: "Dashboard", icon: Home, link: "/" },
     { name: "Videos", icon: LuFileVideo, link: "/projects" },
     { name: "Timesum", icon: Settings, link: "/timesum" },
+    // { name: "Monthly Report", icon: FileChartColumn, link: "/monthly-report" },
   ];
 
   return (

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { supabase } from "../service/supabaseClient";
-import { computeAggregates, toMonthKey } from "../util/helpers";
+import { computeAggregates, toMonthKey } from "../utils/helpers";
 
 const ProjectContext = createContext();
 

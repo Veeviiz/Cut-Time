@@ -1,6 +1,6 @@
 import React from "react";
 import { useProjects } from "../context/ProjectContext";
-import NumberAnimate from "../util/NumberAnimate";
+import NumberAnimate from "../utils/NumberAnimate";
 import { MdMonetizationOn } from "react-icons/md";
 const Total_earning = () => {
   const { percentChange, lastMonthEarning, totalPrice } = useProjects();

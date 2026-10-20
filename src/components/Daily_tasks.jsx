@@ -1,5 +1,5 @@
 import { React } from "react";
-import TimeProgressBar from "../util/TimeProgressBar";
+import TimeProgressBar from "../utils/TimeProgressBar";
 import { useProjects } from "../context/ProjectContext";
 const Daily_tasks = () => {
   const { todayProjects } = useProjects();

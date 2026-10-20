@@ -4,7 +4,7 @@ import { useProjects } from "../context/ProjectContext";
 import { FaFilePen } from "react-icons/fa6";
 import { IoTime } from "react-icons/io5";
 import { MdOutlineNumbers } from "react-icons/md";
-import { DEFAULT_RATE } from "../util/helpers";
+import { DEFAULT_RATE } from "../utils/helpers";
 
 const AddNewModal = ({ setOpen, onSuccess, project }) => {
   const { addProject, updateProject, uniqueTitles } = useProjects();

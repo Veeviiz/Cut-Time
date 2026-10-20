@@ -165,6 +165,7 @@ export const computeAggregates = (
     percentChange,
     lastMonthEarning,
     totalPrice,
+    totalMinutes,
     priceEverymonth,
     projectEpCount,
     lastProjectDate,
